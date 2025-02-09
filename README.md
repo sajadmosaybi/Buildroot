@@ -1,3 +1,9 @@
 # Part I. Getting started
-## Chapter 1. About Buildroot
-STM32MP157 buildroot tutorial 
+## About Buildroot
+Buildroot is a tool that simplifies and automates the process of building a complete Linux system for an embedded system, using cross-compilation.
+
+In order to achieve this, Buildroot is able to generate a cross-compilation toolchain, a root filesystem, a Linux kernel image and a bootloader for your target. Buildroot can be used for any combination of these options, independently (you can for example use an existing cross-compilation toolchain, and build only your root filesystem with Buildroot).
+
+Buildroot is useful mainly for people working with embedded systems. Embedded systems often use processors that are not the regular x86 processors everyone is used to having in his PC. They can be PowerPC processors, MIPS processors, ARM processors, etc.
+
+Buildroot supports numerous processors and their variants; it also comes with default configurations for several boards available off-the-shelf. Besides this, a number of third-party projects are based on, or develop their BSP [1] or SDK [2] on top of Buildroot.
