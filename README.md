@@ -7,3 +7,29 @@ In order to achieve this, Buildroot is able to generate a cross-compilation tool
 Buildroot is useful mainly for people working with embedded systems. Embedded systems often use processors that are not the regular x86 processors everyone is used to having in his PC. They can be PowerPC processors, MIPS processors, ARM processors, etc.
 
 Buildroot supports numerous processors and their variants; it also comes with default configurations for several boards available off-the-shelf. Besides this, a number of third-party projects are based on, or develop their BSP [1] or SDK [2] on top of Buildroot.
+## System requirements
+Buildroot is designed to run on Linux systems.
+
+While Buildroot itself will build most host packages it needs for the compilation, certain standard Linux utilities are expected to be already installed on the host system. Below you will find an overview of the mandatory and optional packages (note that package names may vary between distributions)
+## Mandatory packages
+which
+sed
+make (version 3.81 or any later)
+binutils
+build-essential (only for Debian based systems)
+diffutils
+gcc (version 4.8 or any later)
+g++ (version 4.8 or any later)
+bash
+patch
+gzip
+bzip2
+perl (version 5.8.7 or any later)
+tar
+cpio
+unzip
+rsync
+file (must be in /usr/bin/file)
+bc
+findutils
+wget
