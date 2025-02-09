@@ -12,44 +12,6 @@ Buildroot is designed to run on Linux systems.
 
 While Buildroot itself will build most host packages it needs for the compilation, certain standard Linux utilities are expected to be already installed on the host system. Below you will find an overview of the mandatory and optional packages (note that package names may vary between distributions)
 ## Mandatory packages
-which
-
-sed
-
-make (version 3.81 or any later)
-
-binutils
-
-build-essential (only for Debian based systems)
-
-diffutils
-
-gcc (version 4.8 or any later)
-
-g++ (version 4.8 or any later)
-
-bash
-
-patch
-
-gzip
-
-bzip2
-
-perl (version 5.8.7 or any later)
-
-tar
-
-cpio
-
-unzip
-
-rsync
-
-file (must be in /usr/bin/file)
-
-bc
-
-findutils
-
-wget
+**which, sed, make (version 3.81 or any later), binutils, build-essential (only for Debian based systems), diffutils, gcc (version 4.8 or any later), g++ (version 4.8 or any later), bash, patch, gzip, bzip2, perl (version 5.8.7 or any later), tar, cpio, unzip, rsync, file (must be in /usr/bin/file), bc,findutils, wget**
+## Getting Buildroot
+git clone -b master https://github.com/buildroot/buildroot.git
