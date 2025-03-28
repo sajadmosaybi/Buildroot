@@ -32,9 +32,15 @@ for the original curses-based configurator, or
 
 for the new curses-based configurator, or
 
-```make xconfig```
+```$ make xconfig```
 
 for the Qt-based configurator, or
 
 ```$ make gconfig```
+
+Once everything is configured, the configuration tool generates a .config file that contains the entire configuration. This file will be read by the top-level Makefile.
+
+To start the build process, simply run:
+
+```$ make```
 
