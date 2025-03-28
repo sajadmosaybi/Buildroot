@@ -26,3 +26,15 @@ From the buildroot directory, run
 
 ```$ make menuconfig```
 
+for the original curses-based configurator, or
+
+```$ make nconfig```
+
+for the new curses-based configurator, or
+
+```make xconfig```
+
+for the Qt-based configurator, or
+
+```$ make gconfig```
+
