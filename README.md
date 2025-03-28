@@ -14,7 +14,6 @@ While Buildroot itself will build most host packages it needs for the compilatio
 ## Mandatory packages
 **which, sed, make (version 3.81 or any later), binutils, build-essential (only for Debian based systems), diffutils, gcc (version 4.8 or any later), g++ (version 4.8 or any later), bash, patch, gzip, bzip2, perl (version 5.8.7 or any later), tar, cpio, unzip, rsync, file (must be in /usr/bin/file), bc,findutils, wget**
 ## Optional packages
-**python (version 2.7 or any later), ncurses5 to use the menuconfig interface, qt5 to use the xconfig interface, glib2, gtk2 and glade2 to use the gconfig interface
-**
+**python (version 2.7 or any later), ncurses5 to use the menuconfig interface, qt5 to use the xconfig interface, glib2, gtk2 and glade2 to use the gconfig interface**
 ## Getting Buildroot
 git clone -b master https://github.com/buildroot/buildroot.git
