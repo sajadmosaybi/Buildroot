@@ -24,5 +24,5 @@ The first step when using Buildroot is to create a configuration. Buildroot has 
 
 From the buildroot directory, run
 
-'''$ make menuconfig'''
+```$ make menuconfig```
 
