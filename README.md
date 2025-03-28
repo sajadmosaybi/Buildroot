@@ -20,7 +20,7 @@ git clone -b master https://github.com/buildroot/buildroot.git
 # Part II: Buildroot quick start
 **Important**: you can and should **build everything as a normal user**. There is no need to be root to configure and use Buildroot. By running all commands as a regular user, you protect your system against packages behaving badly during compilation and installation.
 
-The first step when using Buildroot is to create a configuration. Buildroot has a nice configuration tool similar to the one you can find in the Linux kernel or in BusyBox.
+The first step when using Buildroot is to create a configuration. Buildroot has a nice configuration tool similar to the one you can find in the [Linux kernel](https://www.kernel.org) or in [BusyBox](https://busybox.net).
 
 From the buildroot directory, run
 
