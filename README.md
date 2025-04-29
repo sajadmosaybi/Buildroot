@@ -34,3 +34,124 @@ cd buildroot
 git checkout 2024.02  # or latest stable release
 cp ../stm32mp157-buildroot/configs/stm32mp157_defconfig configs/
 make stm32mp157_defconfig
+```
+
+## 🛠️ Build the Image
+
+```bash
+make
+```
+## 📤 Output
+
+```bash
+output/images/
+├── zImage                # Linux kernel
+├── rootfs.ext4           # Root filesystem
+├── boot.scr              # U-Boot boot script
+├── sdcard.img            # Full SD card image (optional)
+```
+## 💽 Flash to SD Card
+
+Insert your SD card and identify the correct device path (e.g., /dev/sdX). Then flash:
+
+```bash
+sudo dd if=output/images/sdcard.img of=/dev/sdX bs=1M status=progress
+sync
+```
+
+## 🚀 Boot the STM32MP157-DK1
+
+1-Insert the SD card.
+
+2-Connect the USB-to-UART or HDMI display.
+
+3-Power on the board.
+
+4-You should see Linux boot messages.
+
+## 📜 Post-Build Script
+
+You can customize the root filesystem with a post-build.sh script:
+
+```bash
+#!/bin/sh
+echo "Customizing root filesystem..."
+cp /path/to/local/script.sh $TARGET_DIR/usr/local/bin/
+chmod +x $TARGET_DIR/usr/local/bin/script.sh
+```
+Add this script path under System configuration → Custom scripts in make menuconfig.
+
+## ⚙️ Customize Your Build
+
+```bash
+make menuconfig
+```
+
+Here you can:
+
+1-Add BusyBox utilities
+
+2-Enable SSH (dropbear or OpenSSH)
+
+3-Add Qt, Python, Node.js, or other packages
+
+4-Modify root password and hostname
+
+5-Enable systemd or other init systems
+
+## 🧪 Debugging
+
+```
+Username: root
+Password: (none)
+```
+
+## 🖼️ Screenshots (Optional)
+
+```
+U-Boot 2024.01 (Apr 29 2025 - 10:00:00 +0000)
+
+CPU: STM32MP157C Rev.B
+DRAM: 512 MiB
+NAND: 0 MiB
+MMC: STM32 SD/MMC: 0
+In: serial
+Out: serial
+Err: serial
+Net: No ethernet found.
+Hit any key to stop autoboot: 0
+Booting Linux...
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 6.6.9 (buildroot@localhost) ...
+[    2.123456] Freeing unused kernel memory...
+[    3.456789] Welcome to Buildroot
+stm32mp157 login: root
+```
+```
+Welcome to Buildroot
+
+stm32mp157 login: root
+# uname -a
+Linux buildroot 6.6.9 #1 SMP Tue Apr 29 10:00:00 UTC 2025 armv7l GNU/Linux
+# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        32M   15M   17M  47% /
+tmpfs            64M     0   64M   0% /tmp
+```
+
+## 🙋 Author & Credits
+
+Developed by Sajad Mosayebi
+
+
+This project is inspired by the open-source STM32 ecosystem and Buildroot community.
+
+Buildroot: https://buildroot.org
+
+STM32MP1 Docs: https://wiki.st.com/stm32mpu
+
+
+
