@@ -60,7 +60,7 @@ obj-$(CONFIG_CMD_MYCOMMAND) += cmd_mycommand.o
 Run:
 
 ```bash
-make menuconfig
+make uboot-menuconfig
 ```
 
 Navigate to **Commands → Custom Commands** (or the relevant section) and enable **mycommand**.
@@ -70,11 +70,10 @@ Navigate to **Commands → Custom Commands** (or the relevant section) and enabl
 ## 5. Build U-Boot
 
 ```bash
-make CROSS_COMPILE=<your-toolchain-prefix> <board>_defconfig
-make CROSS_COMPILE=<your-toolchain-prefix> -j$(nproc)
+make uboot-rebuild -j$(nproc)
+make -j$(nproc)
 ```
 
-Replace `<your-toolchain-prefix>` with your cross-compiler prefix, e.g., `arm-none-eabi-`.
 
 ---
 
