@@ -44,25 +44,25 @@ sudo cp myscript.service /etc/systemd/system/myscript.service
 2. Reload systemd:
 
 ```bash
-sudo systemctl daemon-reload
+systemctl daemon-reload
 ```
 
 3. Enable the service at boot:
 
 ```bash
-sudo systemctl enable myscript.service
+systemctl enable myscript.service
 ```
 
 4. Start the service immediately (optional):
 
 ```bash
-sudo systemctl start myscript.service
+systemctl start myscript.service
 ```
 
 5. Check status:
 
 ```bash
-sudo systemctl status myscript.service
+systemctl status myscript.service
 ```
 
 6. View logs:
@@ -71,7 +71,6 @@ sudo systemctl status myscript.service
 journalctl -u myscript.service -f
 ```
 
-> **Note:** If your Linux does not use systemd (e.g., WSL, Docker, or minimal embedded Linux), `systemctl` will not work. You can run the script manually or use alternative startup methods like `/etc/rc.local` or process managers like `supervisord`.
 
 ## License
 
