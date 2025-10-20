@@ -1,0 +1,5 @@
+config BR2_PACKAGE_MY_CLI
+    bool "my_cli"
+    help
+      Simple CLI program that runs on startup.
+
