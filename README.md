@@ -4,7 +4,8 @@ This project provides a lightweight **Command Line Interface (CLI) shell** writt
 It replaces the standard Linux shell (bash/sh) with a custom user-defined shell that allows only specific commands and restricts system access.
 
 ---
-CLI C Code
+## CLI C Code
+---
 ## 🧩 Features
 
 - Runs automatically on boot via serial console (`ttySTM0`)
