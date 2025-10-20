@@ -118,7 +118,7 @@ int main(void) {
 ## 🛠️ Requirements
 
 - STM32MP157A-DK1 board  
-- Buildroot (tested with 2024.x)  
+- Buildroot (tested with 2023.x)  
 - BusyBox init system (default in Buildroot)  
 - UART serial console (e.g., `/dev/ttySTM0` at 115200 baud)
 
