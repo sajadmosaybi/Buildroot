@@ -1,297 +1,158 @@
- Buildroot for STM32MP157
-# README: Adding a Custom Package in Buildroot
+# Embedded CLI Shell for STM32MP157A (Buildroot + BusyBox)
 
-This repository contains the configuration and support files for building a custom Linux system using Buildroot for the STM32MP157-DK1 development board.
-This README explains how to add a custom package to **Buildroot** so it appears in **menuconfig** and is built into the target filesystem.
+This project provides a lightweight **Command Line Interface (CLI) shell** written in **C** for the **STM32MP157A-DK1** development board running **Linux built with Buildroot**.  
+It replaces the standard Linux shell (bash/sh) with a custom user-defined shell that allows only specific commands and restricts system access.
 
-## 🧠 What is Buildroot?
 ---
 
-[Buildroot](https://buildroot.org) is a simple, efficient, and powerful tool to generate embedded Linux systems through cross-compilation.
-## 1. Create the Package Directory
+## 🧩 Features
 
-## 🧩 Board Used
+- Runs automatically on boot via serial console (`ttySTM0`)
+- Provides a restricted, user-friendly CLI
+- Supports common Linux commands:
+  - `ls`, `cat <file>`, `ps`, `reboot`
+- Includes user-defined commands:
+  - `led_on`, `led_off`
+- Built-in commands:
+  - `help`, `clear`, `exit`
+- Prevents user access to bash or other shells
+- Simple, clean C implementation (no external libraries)
 
-- **STM32MP157-DK1** (or any STM32MP1-based development board)
-- STMicroelectronics MPU
-
-## 📁 Repository Contents
-
-- `configs/stm32mp157_defconfig` - Custom Buildroot configuration file
-- `board/stm32mp157/` - Post-build scripts and board-specific data
-- `README.md` - Project documentation
-
-## 🔧 Requirements
-
-- Linux build host (Ubuntu 20.04+ recommended)
-- Git, build-essential, cpio, rsync, unzip, wget, gcc, make
-- Python3, libncurses-dev, bc, etc.
-- Internet access to download packages
-
-## 🚀 Getting Started
-
-### 1. Clone this repo and Buildroot
-Navigate to the Buildroot `package` directory and create a folder for your package:
-
-```bash
-git clone https://github.com/buildroot/buildroot.git
-cd buildroot
-git checkout 2024.02  # or latest stable release
-cp ../stm32mp157-buildroot/configs/stm32mp157_defconfig configs/
-make stm32mp157_defconfig
-cd <buildroot>/package
-mkdir mycustompkg
-cd mycustompkg
-```
-
-## 🛠️ Build the Image
 ---
 
-```bash
-make
-```
-## 📤 Output
+## 🛠️ Requirements
 
-```bash
-output/images/
-├── zImage                # Linux kernel
-├── rootfs.ext4           # Root filesystem
-├── boot.scr              # U-Boot boot script
-├── sdcard.img            # Full SD card image (optional)
-```
-## 💽 Flash to SD Card
-## 2. Create Config.in
+- STM32MP157A-DK1 board  
+- Buildroot (tested with 2024.x)  
+- BusyBox init system (default in Buildroot)  
+- UART serial console (e.g., `/dev/ttySTM0` at 115200 baud)
 
-Insert your SD card and identify the correct device path (e.g., /dev/sdX). Then flash:
-Create a file named `Config.in` inside the package directory:
-
-```bash
-sudo dd if=output/images/sdcard.img of=/dev/sdX bs=1M status=progress
-sync
-```text
-config BR2_PACKAGE_MYCUSTOMPKG
-    bool "mycustompkg"
-    help
-      My custom package for Buildroot
-```
-
-## 🚀 Boot the STM32MP157-DK1
-
-1-Insert the SD card.
-This allows the package to appear in Buildroot's `menuconfig`.
-
-2-Connect the USB-to-UART or HDMI display.
 ---
 
-3-Power on the board.
-## 3. Create the Build Script (`.mk`)
+## 📁 Project Structure
 
-4-You should see Linux boot messages.
-Create `mycustompkg.mk` in the same folder:
-
-## 📜 Post-Build Script
-```makefile
-MYCUSTOMPKG_VERSION = 1.0
-MYCUSTOMPKG_SITE = $(TOPDIR)/package/mycustompkg
-MYCUSTOMPKG_LICENSE = GPL-2.0+
-MYCUSTOMPKG_LICENSE_FILES = LICENSE
-
-You can customize the root filesystem with a post-build.sh script:
-
-```bash
-#!/bin/sh
-echo "Customizing root filesystem..."
-cp /path/to/local/script.sh $TARGET_DIR/usr/local/bin/
-chmod +x $TARGET_DIR/usr/local/bin/script.sh
 ```
-Add this script path under System configuration → Custom scripts in make menuconfig.
-define MYCUSTOMPKG_BUILD_CMDS
-    $(MAKE) -C $(@D)
-endef
+embedded_shell/
+├── Config.in
+├── embedded_shell.c
+└── embedded_shell.mk
+```
 
-## ⚙️ Customize Your Build
-define MYCUSTOMPKG_INSTALL_TARGET_CMDS
-    $(INSTALL) -D -m 0755 $(@D)/mycustomprog $(TARGET_DIR)/usr/bin/mycustomprog
-endef
+---
+
+## ⚙️ Build Instructions
+
+### 1️⃣ Add to Buildroot
+
+Copy this folder into your Buildroot tree:
+```
+buildroot/package/embedded_shell/
+```
+
+Then add it to Buildroot’s configuration:
 
 ```bash
 make menuconfig
-$(eval $(generic-package))
 ```
 
-Here you can:
+Go to:
+```
+Target packages → Misc → [*] embedded_shell
+```
 
-1-Add BusyBox utilities
+Save and exit.
 
-2-Enable SSH (dropbear or OpenSSH)
-> Replace `mycustomprog` with your actual executable or script.
-3-Add Qt, Python, Node.js, or other packages
 ---
 
-4-Modify root password and hostname
-## 4. Add the Package to Buildroot Tree
+### 2️⃣ Build the System
 
-5-Enable systemd or other init systems
-Edit `package/Config.in` in Buildroot and add:
-
-## 🧪 Debugging
-
-```
-Username: root
-Password: (none)
-```text
-source "package/mycustompkg/Config.in"
-```
-
-## 🖼️ Screenshots (Optional)
----
-
-```
-U-Boot 2024.01 (Apr 29 2025 - 10:00:00 +0000)
-CPU: STM32MP157C Rev.B
-DRAM: 512 MiB
-NAND: 0 MiB
-MMC: STM32 SD/MMC: 0
-In: serial
-Out: serial
-Err: serial
-Net: No ethernet found.
-Hit any key to stop autoboot: 0
-Booting Linux...
-Starting kernel ...
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 6.6.9 (buildroot@localhost) ...
-[    2.123456] Freeing unused kernel memory...
-[    3.456789] Welcome to Buildroot
-stm32mp157 login: root
-```
-```
-Welcome to Buildroot
-stm32mp157 login: root
-# uname -a
-Linux buildroot 6.6.9 #1 SMP Tue Apr 29 10:00:00 UTC 2025 armv7l GNU/Linux
-# df -h
-Filesystem      Size  Used Avail Use% Mounted on
-/dev/root        32M   15M   17M  47% /
-tmpfs            64M     0   64M   0% /tmp
-```
-## 🧩 Important make menuconfig Options for STM32MP157
-## 5. Enable the Package in Menuconfig
-
-### 1. Target Options
-```bash
-make menuconfig
-```
-Target Architecture          → ARM (little endian)
-
-Target Architecture Variant → cortex-a7
-Navigate to your section (e.g., **Target packages → Custom packages**) and enable **mycustompkg**.
-
-Target ABI                  → EABIhf (hard float)
-```
----
-
-### 2. Toolchain
-## 6. Build Buildroot
-
-If you’re not using an external toolchain, use Buildroot’s:
-```
-Toolchain Type              → Buildroot toolchain
-C library                   → glibc or musl (default: musl for size)
-Enable C++ support          → [*]
-```
-If you want to use ST's toolchain (optional):
-```
-Toolchain Type              → External toolchain
-Toolchain                   → Custom
-Path                        → /path/to/st-toolchain
-```
-
-### 3. System Configuration
-```
-Root password               → (Optional) Set to "root" or leave empty
-Enable root login with password → [*]
-System hostname             → stm32mp157
-Init system                 → busybox or systemd (default: busybox)
-```
-Post-build script:
-
-```
-Custom scripts to run → board/stm32mp157/post-build.sh
-```
-### 4. Kernel
-```
-Linux Kernel → [*] (enable)
-  → Kernel Version        → Latest stable or specific tag (e.g., 6.6.9)
-  → Kernel configuration  → Use a custom defconfig (e.g., linux-headers or stm32mp1_defconfig)
-  → Kernel binary format  → zImage
-  → Device Tree           → [*] stm32mp157c-dk1.dtb (or your variant)
-  → Install kernel image to /boot → [*]
-```
-### 5. Bootloader (U-Boot)
-```
-Bootloaders → U-Boot → [*]
-  → Board       → st/stm32mp157-dk1
-  → U-Boot version → 2024.01 or latest
-  → Build system  → Kconfig
-```
-### 6. Target Packages
-
-Enable based on your needs. For example:
-```
-Networking applications → [*] dropbear (SSH server)
-```
-Filesystem Tools:
-```
-Filesystem utilities → [*] e2fsprogs, dosfstools, mtools
-```
-Languages / Runtime:
-```
-Interpreter languages and scripting → [*] Python 3.x, Lua
-```
-Debugging tools:
-```
-Debugging, profiling and benchmarking → [*] strace, gdb, ltrace
-```
-Other Utilities:
-```
-Text editors → [*] nano, vim
-```
-### 7. Filesystem Images
-```
-Filesystem images → [*] ext2/3/4 root filesystem
-  → ext2/3/4 variant → ext4
-  → Journaled       → [ ]
-  → Image name      → rootfs.ext4
-```
-If you're using an SD card image:
-```
-SD card image → [*]
-  → GPT partition table → [*]
-  → Populate boot and rootfs partitions → [*]
-```
-### 8. Host Utilities
-```
-Host utilities → [*] host-genimage, host-dtc, host-pkgconf
+Run:
 ```bash
 make
 ```
-## 🙋 Author & Credits
 
-Developed by Sajad Mosayebi
-
-
-This project is inspired by the open-source STM32 ecosystem and Buildroot community.
-
-Buildroot: https://buildroot.org
-
-STM32MP1 Docs: https://wiki.st.com/stm32mpu
-Buildroot will build and install your package into the target root filesystem.
+After the build completes, the binary will be installed at:
+```
+/usr/bin/embedded_shell
+```
 
 ---
 
-### Notes
+### 3️⃣ Auto-start on Boot
 
-- Ensure your package files are in the proper directory structure (`mycustompkg/Config.in` and `mycustompkg.mk`).
-- You can include source files in the same directory or point to a remote site in the `.mk` file.
-- This method allows full control over building, installing, and configuring custom software in Buildroot.
+Edit your Buildroot overlay or root filesystem file `/etc/inittab`:
+
+Find this line:
+```
+ttySTM0::respawn:/sbin/getty -L ttySTM0 115200 vt100
+```
+
+Replace it with:
+```
+ttySTM0::respawn:/usr/bin/embedded_shell
+```
+
+This ensures that when the board boots and the serial console opens, your CLI runs directly — without login or access to the standard Linux shell.
+
+---
+
+## ▶️ Usage Example
+
+When you power up and connect via serial (115200 baud), you’ll see:
+
+```
+=====================================
+  Embedded CLI Shell - STM32MP157A
+=====================================
+Type 'help' to see available commands.
+
+stm32>
+```
+
+### Available Commands
+
+| Command | Description |
+|----------|-------------|
+| `help` | Show list of available commands |
+| `clear` | Clear the terminal screen |
+| `ls` | List files in current directory |
+| `cat <file>` | Display file contents |
+| `ps` | Show running processes |
+| `reboot` | Reboot the system |
+| `led_on` | Turn on LED (example using sysfs) |
+| `led_off` | Turn off LED |
+| `exit` | Exit shell (if `respawn:` in inittab, it restarts) |
+
+---
+
+## 🔒 Security
+
+To limit access to the standard shell:
+- Disable `login` and `bash` in Buildroot (`make menuconfig`)
+- Ensure `/bin/sh` is not accessible
+- Configure `/etc/inittab` to run only this CLI
+
+This ensures that users interacting over UART can **only** use your restricted CLI.
+
+---
+
+## 🧰 Future Enhancements
+
+- Command history and arrow key navigation (via `linenoise`)
+- Tab auto-completion
+- Custom hardware control commands (GPIO, I2C, etc.)
+- Ethernet or UART remote CLI interface
+
+---
+
+## 🧑‍💻 Author
+
+**Sajad Mosayebi**  
+Embedded Systems Engineer  
+📧 Smosaybi@gmail.com 
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — you are free to use, modify, and distribute it with attribution.
