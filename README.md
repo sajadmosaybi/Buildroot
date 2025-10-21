@@ -64,12 +64,18 @@ U_BOOT_CMD(
 make stm32mp157a_dk1_defconfig
 make -j$(nproc)
 ```
+## 3. Update the Makefile
 
-## Step 3: Flash U-Boot to STM32MP157A-DK1
+Edit the `cmd/Makefile` to include your file conditionally:
+
+```makefile
+obj-$(CONFIG_CMD_MYCONFIG) += cmd_myconfig.o
+```
+## Step 4: Flash U-Boot to STM32MP157A-DK1
 
 - Follow your normal method (SD card, eMMC, or ST-Link) to flash the new U-Boot binary.
 
-## Step 4: Usage
+## Step 5: Usage
 
 Boot into U-Boot and run:
 
