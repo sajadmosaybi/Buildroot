@@ -1,94 +1,91 @@
-# README: Adding a Custom U-Boot Command
 
-This repository demonstrates how to add a custom command to **U-Boot** and integrate it with **menuconfig** so it can be enabled or disabled during build.
+# STM32MP157A-DK1 Custom U-Boot Command: `myconfig`
 
----
+This project demonstrates how to add a custom U-Boot command on the STM32MP157A-DK1 board to **set IP, server IP, MAC address dynamically, and ping a server**.
 
-## 1. Create the Command Source File
+## Features
 
-Create `cmd_mycommand.c` inside the `cmd/` directory:
+- Set IP, server IP, and MAC address dynamically via U-Boot command arguments.
+- Works without overwriting type-checked U-Boot variables.
+- Pings the specified server to verify connectivity.
+
+## Prerequisites
+
+- STM32MP157A-DK1 board
+- U-Boot source code (e.g., version 2021.10)
+- Buildroot environment for STM32MP1
+- Basic knowledge of U-Boot build and flash process
+
+## Step 1: Add Custom Command Source File
+
+Create a file `cmd_myconfig.c` in the `cmd/` directory of U-Boot:
 
 ```c
 #include <common.h>
 #include <command.h>
+#include <net.h>
 
-static int do_mycommand(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+int do_myconfig(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
-    printf("Hello from my custom command!\n");
+    /* Set IP address */
+    env_set("ipaddr", "IP");   // replace with your desired IP
+    env_set("serverip", "server IP");   // replace with your server IP
+    env_set("ethaddr", "MAC"); // replace with your MAC
+
+    printf("IP: %s\n", env_get("ipaddr"));
+    printf("Server IP: %s\n", env_get("serverip"));
+    printf("MAC: %s\n", env_get("ethaddr"));
+
+    /* Ping the server */
+    printf("Pinging server...\n");
+    if (ping(get_server_ip(), 1) == 0) {
+        printf("Ping success!\n");
+    } else {
+        printf("Ping failed!\n");
+    }
+
     return 0;
 }
 
-/* Register the command with U-Boot */
+/* Register the command */
 U_BOOT_CMD(
-    mycommand,   // Command name
-    1,           // Max number of arguments
-    1,           // Repeatable
-    do_mycommand,// Function pointer
-    "My custom command", // Short help
-    "mycommand - prints a greeting" // Long help
+    myconfig,    /* name */
+    1,           /* max args */
+    0,           /* repeatable */
+    do_myconfig, /* command function */
+    "Set IP, server IP, MAC and ping", /* description */
+    ""
 );
 ```
 
----
-
-## 2. Add a Kconfig Entry
-
-Add a Kconfig option for your command. Edit `cmd/Kconfig` or the appropriate file:
-
-```text
-config CMD_MYCOMMAND
-    bool "Enable mycommand"
-    default y
-    help
-      Enable the 'mycommand' command in U-Boot.
-```
-
----
-
-## 3. Update the Makefile
-
-Edit the `cmd/Makefile` to include your file conditionally:
-
-```makefile
-obj-$(CONFIG_CMD_MYCOMMAND) += cmd_mycommand.o
-```
-
----
-
-## 4. Enable the Command in Menuconfig
-
-Run:
+## Step 2: Build U-Boot
 
 ```bash
-make uboot-menuconfig
-```
-
-Navigate to **Commands → Custom Commands** (or the relevant section) and enable **mycommand**.
-
----
-
-## 5. Build U-Boot
-
-```bash
-make uboot-rebuild -j$(nproc)
+make stm32mp157a_dk1_defconfig
 make -j$(nproc)
 ```
 
+## Step 3: Flash U-Boot to STM32MP157A-DK1
 
----
+- Follow your normal method (SD card, eMMC, or ST-Link) to flash the new U-Boot binary.
 
-## 6. Test the Command
+## Step 4: Usage
 
-After flashing U-Boot, test your command at the prompt:
+Boot into U-Boot and run:
 
 ```bash
-=> mycommand
-Hello from my custom command!
+=> myconfig 192.168.100.180 192.168.100.1 00:11:22:33:44:55
 ```
 
----
+- Sets the IP, server IP, and MAC using your inputs.
+- Pings the server IP to verify connectivity.
 
-### Notes
+## Notes
 
-- Ensure the `.c` file, Kconfig, and Makefile modifications are placed in the correct folders.
-- You can toggle the command on/off using `menuconfig` without modifying the source code each time.
+- Do not overwrite default type-checked variables (`ipaddr`, `serverip`, `ethaddr`) directly; use custom variables instead.
+- `ethaddr` must be set if not already configured; otherwise, Ethernet will not initialize.
+- You can modify the command to add DHCP initialization or static network setup as needed.
+
+## License
+
+MIT License
