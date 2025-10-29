@@ -93,7 +93,18 @@ chmod +x /etc/init.d/S99network
 ```
 
 ---
-
+## Enable static ip
+```bash
+nano//etc/network/interfaces
+```
+```bash
+auto eth0
+iface eth0 inet static
+    address 192.168.100.99
+    netmask 255.255.255.0
+    gateway 192.168.100.1
+    dns-nameservers 8.8.8.8 1.1.1.1
+```
 ## Enable SSH (Dropbear)
 
 1. Enable Dropbear in Buildroot:
