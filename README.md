@@ -93,7 +93,7 @@ chmod +x /etc/init.d/S99network
 ```
 
 ---
-## Enable static ip
+## Static IP Configuration
 ```bash
 nano//etc/network/interfaces
 ```
