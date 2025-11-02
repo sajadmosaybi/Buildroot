@@ -99,14 +99,6 @@ chmod 644 /home/limiteduser/.profile
 
 ---
 
-### 🧍 Step 8 — Set home directory ownership
-```bash
-chown -R limiteduser:limiteduser /home/limiteduser
-chown root:root /home/limiteduser/bin
-```
-
----
-
 ### ✅ Step 9 — Test the setup
 Switch to the user:
 ```bash
@@ -130,14 +122,6 @@ cd /
 
 ---
 
-### 🔐 Optional — Make the bin folder immutable
-For extra protection (if using ext4):
-```bash
-chattr +i /home/limiteduser/bin
-```
-
----
-
 ## ✅ Result
 You now have a **restricted BusyBox user** who can only execute:
 ```
@@ -145,6 +129,4 @@ ls, cp, ip
 ```
 
 ---
-
-## 🧩 Optional Next Step
-To make this configuration permanent, you can integrate these steps into your **Buildroot rootfs overlay** so it persists across builds.
+.
