@@ -1,13 +1,15 @@
- Buildroot for STM32MP157
-# README: Adding a Custom Package in Buildroot
+ 
+# README: User Access limitation
 
-This repository contains the configuration and support files for building a custom Linux system using Buildroot for the STM32MP157-DK1 development board.
-This README explains how to add a custom package to **Buildroot** so it appears in **menuconfig** and is built into the target filesystem.
+This method uses a restricted shell (rbash) + a ~/bin containing only the permitted programs (owned by root). It’s simple and robust for embedded systems.
 
-## 🧠 What is Buildroot?
+## 🧩 Goal
 ---
 
-[Buildroot](https://buildroot.org) is a simple, efficient, and powerful tool to generate embedded Linux systems through cross-compilation.
+We’ll create a user named limiteduser who:
+Can only run: `ls`, `cp`, `ip`
+Cannot run any other commands
+Uses restricted shell (rbash)
 ## 1. Create the Package Directory
 
 ## 🧩 Board Used
