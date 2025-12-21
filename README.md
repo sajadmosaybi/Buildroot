@@ -1,49 +1,119 @@
-# 🐧 Buildroot Linux Shell Prompt Configuration (PS1)
-## Change Prompt Name, Colors, and Settings (BusyBox ash)
+# 🐧 Change System Hostname and System Banner in Buildroot
 
-This guide explains **how to change the Linux shell prompt name and colors** in an **embedded Linux system built with Buildroot**.
-It is written for **BusyBox (ash)** and is ready to use in a **GitHub repository**.
+This document explains **how to change the system hostname and system banner** in an embedded Linux system built with **Buildroot**.
+It is suitable for **BusyBox-based embedded Linux** systems such as STM32MP1, Zynq, and Raspberry Pi.
 
 ---
 
-## ✅ Supported Targets
+## ✅ Supported Platforms
 - STM32MP1
 - Zynq-7000
 - Raspberry Pi (Buildroot)
-- Licheepi zero
-- Any BusyBox-based embedded Linux
+- licheepi zero
+- Any Buildroot-based embedded Linux system
 
 ---
 
-## 📌 What Is the Shell Prompt (PS1)?
+## 📌 Definitions
 
-Example default prompt:
+### System Hostname
+The hostname is the system name shown in the shell prompt:
+
 ```
 root@buildroot:~#
 ```
 
-The prompt text and colors are controlled by the environment variable **PS1**.
+### System Banner
+The system banner is the message displayed **before login**, for example:
 
----
-
-## ⚠️ Important Notes (BusyBox)
-- Buildroot uses **BusyBox ash**
-- `.bashrc` is **NOT used**
-- Prompt must be set in:
 ```
-/etc/profile
+Welcome to Buildroot
+buildroot login:
 ```
 
 ---
 
-## ⭐ Best Practice (Recommended)
+## 🛠 Method 1: Using Buildroot menuconfig (Recommended)
 
-Use a **Root Filesystem Overlay** so changes are permanent and version-controlled.
+### 1️⃣ Open Buildroot Configuration
 
-❌ Do NOT edit:
+From the Buildroot directory:
+
 ```
-output/target/etc/profile
+make menuconfig
 ```
+
+---
+
+## 🖥 Change System Hostname
+
+Navigate to:
+
+```
+System configuration  --->
+    System hostname (buildroot)
+```
+
+Change it to your board name, for example:
+
+```
+System hostname (STM32MP1)
+```
+
+### ✅ Result After Boot
+
+```
+root@STM32MP1:~#
+```
+
+### 📁 Generated File
+Buildroot automatically creates:
+
+```
+/etc/hostname
+```
+
+---
+
+## 🖥 Change System Banner
+
+Navigate to:
+
+```
+System configuration  --->
+    System banner
+```
+
+Example banner text:
+
+```
+====================================
+ Welcome to STM32MP1 Embedded Linux
+ Built with Buildroot
+====================================
+```
+
+### ✅ Result on Boot
+
+```
+====================================
+ Welcome to STM32MP1 Embedded Linux
+====================================
+STM32MP1 login:
+```
+
+### 📁 Generated File
+Buildroot writes the banner to:
+
+```
+/etc/issue
+```
+
+---
+
+## 🛠 Method 2: Using Root Filesystem Overlay (Advanced)
+
+This method is useful when you want **file-based control** and version tracking.
 
 ---
 
@@ -55,128 +125,41 @@ buildroot/
     └── myboard/
         └── rootfs-overlay/
             └── etc/
-                └── profile
+                ├── hostname
+                └── issue
 ```
 
 ---
 
-## 🛠 Step-by-Step Configuration
+## ✏️ Change Hostname via Overlay
 
-### 1️⃣ Create Rootfs Overlay
-```
-mkdir -p board/myboard/rootfs-overlay/etc
-```
-
----
-
-### 2️⃣ Create `/etc/profile`
-```
-nano board/myboard/rootfs-overlay/etc/profile
-```
-
----
-
-## ✏️ Change Prompt Name (Basic)
+Create the file:
 
 ```
-export PS1="MyLinux:\W# "
+board/myboard/rootfs-overlay/etc/hostname
 ```
 
-Result:
+Content:
 ```
-MyLinux:~#
+STM32MP1
 ```
 
 ---
 
-## 🧩 PS1 Variables
+## ✏️ Change Banner via Overlay
 
-| Symbol | Meaning |
-|------|--------|
-| \u | Username |
-| \h | Hostname |
-| \w | Full path |
-| \W | Current directory |
-| \$ | # (root) or $ (user) |
-| \t | Time |
-| \d | Date |
-
----
-
-## 🎨 Color Configuration
-
-### ⚠️ Color Rules (Very Important)
-- Always wrap colors with `\[` and `\]`
-- Always reset color at the end
-- Use ANSI escape codes
-
----
-
-### 🎨 ANSI Text Colors
-
-| Color | Code |
-|----|----|
-| Black | 30 |
-| Red | 31 |
-| Green | 32 |
-| Yellow | 33 |
-| Blue | 34 |
-| Magenta | 35 |
-| Cyan | 36 |
-| White | 37 |
-
----
-
-### 🎨 Background Colors
-
-| Color | Code |
-|----|----|
-| Black | 40 |
-| Red | 41 |
-| Green | 42 |
-| Yellow | 43 |
-| Blue | 44 |
-
----
-
-## 🧪 Prompt Examples
-
-### 🟢 Green Prompt
-```
-export PS1="\[\e[32m\]MyLinux:\W# \[\e[0m\]"
-```
-
----
-
-### 🔵 Username + Hostname (Blue)
-```
-export PS1="\[\e[34m\][\u@\h \W]# \[\e[0m\]"
-```
-
----
-
-### 🟡 Embedded Board Name (Yellow)
-```
-export PS1="\[\e[33m\]STM32MP1\[\e[0m\]:\W# "
-```
-
----
-
-### 🎯 Professional Multi-Color Prompt
-```
-export PS1="\[\e[32m\]\u\[\e[0m\]@\[\e[34m\]\h\[\e[0m\]:\[\e[36m\]\W\[\e[0m\]# "
-```
-
----
-
-## 📄 Full `/etc/profile` Example
+Create the file:
 
 ```
-#!/bin/sh
+board/myboard/rootfs-overlay/etc/issue
+```
 
-echo "Welcome to My Embedded Linux System"
-
-export PS1="\[\e[36m\]MyBoard[\u@\h:\W]# \[\e[0m\]"
+Example content:
+```
+====================================
+ STM32MP1 Embedded Linux System
+ Company / Project Name
+====================================
 ```
 
 ---
@@ -186,13 +169,17 @@ export PS1="\[\e[36m\]MyBoard[\u@\h:\W]# \[\e[0m\]"
 ```
 make menuconfig
 System configuration  --->
-Root filesystem overlay directories
+    Root filesystem overlay directories
+```
+
+Set value:
+```
 board/myboard/rootfs-overlay
 ```
 
 ---
 
-## 🔨 Build and Run
+## 🔨 Build and Test
 
 ```
 make
@@ -202,14 +189,22 @@ Flash and boot your target board.
 
 ---
 
-## ❌ Common Mistakes
+## ⚠️ Common Mistakes
 
-| Mistake | Fix |
-|------|----|
-Editing output files | Use overlay |
-Using .bashrc | Use /etc/profile |
-Broken colors | Add \[ \] |
-No rebuild | Run make |
+| Mistake | Correct Method |
+|------|---------------|
+Editing files at runtime | Use Buildroot |
+Editing output/target | Use overlay |
+Forgetting rebuild | Run make |
+
+---
+
+## 🧠 Recommendations
+
+- Use **menuconfig** for simple projects
+- Use **overlay** for production and GitHub projects
+- Keep hostname short and board-specific
+- Include project name and version in banner
 
 ---
 
