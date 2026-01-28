@@ -1,4 +1,4 @@
-# Buildroot for STM32MP157
+# Buildroot Configuration for STM32MP157
 
 This repository contains the configuration and support files for building a custom Linux system using Buildroot for the STM32MP157-DK1 development board.
 
