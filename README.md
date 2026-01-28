@@ -104,18 +104,14 @@ Starting kernel ...
 [    2.123456] Freeing unused kernel memory...
 [    3.456789] Welcome to Buildroot
 stm32mp157 login: root
-```
-```
 Welcome to Buildroot
 
-stm32mp157 login: root
 # uname -a
 Linux buildroot 6.6.9 #1 SMP Tue Apr 29 10:00:00 UTC 2025 armv7l GNU/Linux
 # df -h
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/root        32M   15M   17M  47% /
 tmpfs            64M     0   64M   0% /tmp
-```
 ```
 ## 🙋 Author & Credits
 
