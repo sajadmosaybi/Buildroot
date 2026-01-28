@@ -1,4 +1,4 @@
-# Buildroot Configuration for STM32MP157
+# Buildroot Configuration
 
 This repository contains the configuration and support files for building a custom Linux system using Buildroot for the STM32MP157-DK1 development board.
 
@@ -8,7 +8,7 @@ This repository contains the configuration and support files for building a cust
 
 ## 🧩 Board Used
 
-- **STM32MP157-DK1** (or any STM32MP1-based development board)
+- **STM32MP157-DK1**, **Raspberry Pi**,**Allwinner Chip** (or any development board)
 - STMicroelectronics MPU
 
 ## 📁 Repository Contents
@@ -39,7 +39,7 @@ make stm32mp157_defconfig
 ## 🛠️ Build the Image
 
 ```bash
-make
+make -jx
 ```
 ## 📤 Output
 
@@ -81,31 +81,6 @@ chmod +x $TARGET_DIR/usr/local/bin/script.sh
 ```
 Add this script path under System configuration → Custom scripts in make menuconfig.
 
-## ⚙️ Customize Your Build
-
-```bash
-make menuconfig
-```
-
-Here you can:
-
-1-Add BusyBox utilities
-
-2-Enable SSH (dropbear or OpenSSH)
-
-3-Add Qt, Python, Node.js, or other packages
-
-4-Modify root password and hostname
-
-5-Enable systemd or other init systems
-
-## 🧪 Debugging
-
-```
-Username: root
-Password: (none)
-```
-
 ## 🖼️ Screenshots (Optional)
 
 ```
@@ -141,98 +116,6 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/root        32M   15M   17M  47% /
 tmpfs            64M     0   64M   0% /tmp
 ```
-## 🧩 Important make menuconfig Options for STM32MP157
-
-### 1. Target Options
-```
-Target Architecture          → ARM (little endian)
-
-Target Architecture Variant → cortex-a7
-
-Target ABI                  → EABIhf (hard float)
-```
-
-### 2. Toolchain
-
-If you’re not using an external toolchain, use Buildroot’s:
-```
-Toolchain Type              → Buildroot toolchain
-C library                   → glibc or musl (default: musl for size)
-Enable C++ support          → [*]
-```
-If you want to use ST's toolchain (optional):
-```
-Toolchain Type              → External toolchain
-Toolchain                   → Custom
-Path                        → /path/to/st-toolchain
-```
-
-### 3. System Configuration
-```
-Root password               → (Optional) Set to "root" or leave empty
-Enable root login with password → [*]
-System hostname             → stm32mp157
-Init system                 → busybox or systemd (default: busybox)
-```
-Post-build script:
-
-```
-Custom scripts to run → board/stm32mp157/post-build.sh
-```
-### 4. Kernel
-```
-Linux Kernel → [*] (enable)
-  → Kernel Version        → Latest stable or specific tag (e.g., 6.6.9)
-  → Kernel configuration  → Use a custom defconfig (e.g., linux-headers or stm32mp1_defconfig)
-  → Kernel binary format  → zImage
-  → Device Tree           → [*] stm32mp157c-dk1.dtb (or your variant)
-  → Install kernel image to /boot → [*]
-```
-### 5. Bootloader (U-Boot)
-```
-Bootloaders → U-Boot → [*]
-  → Board       → st/stm32mp157-dk1
-  → U-Boot version → 2024.01 or latest
-  → Build system  → Kconfig
-```
-### 6. Target Packages
-
-Enable based on your needs. For example:
-```
-Networking applications → [*] dropbear (SSH server)
-```
-Filesystem Tools:
-```
-Filesystem utilities → [*] e2fsprogs, dosfstools, mtools
-```
-Languages / Runtime:
-```
-Interpreter languages and scripting → [*] Python 3.x, Lua
-```
-Debugging tools:
-```
-Debugging, profiling and benchmarking → [*] strace, gdb, ltrace
-```
-Other Utilities:
-```
-Text editors → [*] nano, vim
-```
-### 7. Filesystem Images
-```
-Filesystem images → [*] ext2/3/4 root filesystem
-  → ext2/3/4 variant → ext4
-  → Journaled       → [ ]
-  → Image name      → rootfs.ext4
-```
-If you're using an SD card image:
-```
-SD card image → [*]
-  → GPT partition table → [*]
-  → Populate boot and rootfs partitions → [*]
-```
-### 8. Host Utilities
-```
-Host utilities → [*] host-genimage, host-dtc, host-pkgconf
 ```
 ## 🙋 Author & Credits
 
